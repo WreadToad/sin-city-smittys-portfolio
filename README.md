@@ -10,6 +10,26 @@ project. I use it to build and document hands-on security skills against a fixed
 > employer or real organization, and it does not model or represent any company's
 > systems or infrastructure. This is not professional work experience.
 
+## Start here
+
+New to this repository? Follow these five steps in order.
+
+1. **Overview.** Read [Two separate environments](#two-separate-environments) to
+   see how the REAL LAB differs from the SCS SIMULATION.
+2. **Goal 1 (complete).** Open the
+   [reconnaissance and port scanning write-up](real-lab/01-recon-port-scanning/README.md),
+   then its [evidence notes](real-lab/01-recon-port-scanning/evidence/README.md).
+3. **Goal 2 (in progress).** Nessus Essentials is installed, registered and
+   initialized. The first scan has not been run, so there are no results yet. See
+   [Completed REAL LAB milestones](#completed-real-lab-milestones).
+4. **Goal 3 (next).**
+   [Firewall, DMZ and perimeter defense](#roadmap-12-goals) begins after the
+   first Nessus scan.
+5. **Full roadmap and related work.** See all 12 goals in the
+   [roadmap](#roadmap-12-goals), then the
+   [Sysmon to Splunk write-up](real-lab/02-sysmon-splunk-telemetry/README.md),
+   which is groundwork for Goal 6.
+
 ## Learning purpose
 
 I hold CompTIA Security+ and am working toward a B.S. in Cybersecurity (WGU, in
