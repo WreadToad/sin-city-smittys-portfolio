@@ -22,9 +22,9 @@ New to this repository? Follow these five steps in order.
 3. **Goal 2 (in progress).** Nessus Essentials is installed, registered and
    initialized. The first scan has not been run, so there are no results yet. See
    [Completed REAL LAB milestones](#completed-real-lab-milestones).
-4. **Goal 3 (next).**
-   [Firewall, DMZ and perimeter defense](#roadmap-12-goals) begins after the
-   first Nessus scan.
+4. **Goal 3 (in progress).** Open the
+   [firewall, DMZ and perimeter defense lab](real-lab/03-firewall-dmz-perimeter/README.md),
+   then its [evidence notes](real-lab/03-firewall-dmz-perimeter/evidence/README.md).
 5. **Full roadmap and related work.** See all 12 goals in the
    [roadmap](#roadmap-12-goals), then the
    [Sysmon to Splunk write-up](real-lab/02-sysmon-splunk-telemetry/README.md),
@@ -43,7 +43,7 @@ This project has two environments. They are kept separate and always labeled.
 
 | | REAL LAB | SCS SIMULATION |
 |---|---|---|
-| What it is | An isolated VM lab on my own hardware: a Kali Linux analyst VM, a Windows host running Sysmon and Splunk, a Metasploitable2 target, and Nessus Essentials | A software model of a fictional casino/resort enterprise: a TypeScript simulation core, PostgreSQL, and a 3D client |
+| What it is | An isolated VM lab on my own hardware: a Kali Linux analyst VM, a Windows host running Sysmon and Splunk, a Metasploitable2 target, Nessus Essentials, and a pfSense firewall VM | A software model of a fictional casino/resort enterprise: a TypeScript simulation core, PostgreSQL, and a 3D client |
 | Where the data comes from | Real tools, real packets and real logs | Simulated systems reacting to simulated activity |
 | What it is for | Producing the skills evidence in this portfolio | A learning aid for visualizing network topology, traffic paths and how telemetry is produced |
 | Evidence in this repository | Yes, under [`real-lab/`](real-lab/) | None at this checkpoint |
@@ -59,7 +59,7 @@ The project is scoped to these 12 goals. They are the finish line.
 |---|---|---|---|
 | 1 | Reconnaissance and port scanning | Nmap, Wireshark | Complete (REAL LAB) |
 | 2 | Vulnerability assessment | Nessus | In progress: Nessus installed, registered and initialized; first scan not yet run |
-| 3 | Firewall, DMZ and perimeter defense | | Next |
+| 3 | Firewall, DMZ and perimeter defense | pfSense | In progress (REAL LAB): firewall with LAN and DMZ segments built, first tests recorded, two results still to verify (see lab 03) |
 | 4 | IDS/IPS and network detection | | Not started |
 | 5 | Web-based attacks | Burp | Not started |
 | 6 | Malware, Windows telemetry and SIEM | Sysmon, Splunk | Not started; telemetry groundwork in place (see investigation 02) |
@@ -85,19 +85,25 @@ The project is scoped to these 12 goals. They are the finish line.
 **Nessus status:** the first scan has not been run. There are no scan results,
 findings, vulnerabilities or remediation to report yet.
 
+**In progress (Goal 3):** a pfSense firewall now separates a LAN segment and a
+DMZ segment in the lab. A LAN-to-DMZ ping succeeded, and a DMZ-to-LAN ping was
+denied and logged by the firewall. Two later results still need to be verified.
+See [lab 03](real-lab/03-firewall-dmz-perimeter/README.md).
+
 ## Selected evidence
 
-Two REAL LAB investigations are written up. Each is short and states only what
-was observed.
+Two REAL LAB investigations are written up, and a third lab is in progress.
+Each is short and states only what was observed.
 
 | Investigation | What was done | What was observed | Skills demonstrated |
 |---|---|---|---|
 | [01 — Reconnaissance and port scanning](real-lab/01-recon-port-scanning/README.md) | Scanned the lab target with Nmap, captured the scan in Wireshark, then captured a normal HTTP connection as a control | Scan traffic to port 80 ended SYN, SYN/ACK, RST; the normal connection completed SYN, SYN/ACK, ACK | Port and service discovery, packet analysis, telling scan behavior from a normal TCP session |
 | [02 — Endpoint telemetry: Sysmon to Splunk](real-lab/02-sysmon-splunk-telemetry/README.md) | Applied the SwiftOnSecurity Sysmon configuration, generated a controlled outbound connection, and searched for it in Splunk | A Sysmon Event ID 3 record in Splunk naming the process, the account, and the source and destination of the connection | Endpoint telemetry setup, SIEM validation, attributing network activity to a process and account |
+| [03 — Firewall, DMZ and perimeter defense (in progress)](real-lab/03-firewall-dmz-perimeter/README.md) | Built a pfSense firewall with separate LAN and DMZ segments, then tested traffic in both directions with ping and read the firewall log | LAN-to-DMZ ping succeeded (4 of 4); DMZ-to-LAN ping was denied and logged under the default deny rule | Firewall build, network segmentation, default deny, reading firewall logs |
 
-Screenshots are limited to a few per investigation. Sanitized copies have not
-been added to this repository yet; each investigation's `evidence/` folder lists
-the planned images and their status.
+Screenshots are limited to a few per investigation. Lab 03 has three redacted
+screenshots. Sanitized copies for investigations 01 and 02 have not been added
+yet; each `evidence/` folder lists the images and their status.
 
 ## Lab environment (sanitized)
 
@@ -106,8 +112,10 @@ the planned images and their status.
 | Analyst / scanner | Kali Linux VM | `LAB-KALI` |
 | Windows host (Sysmon and Splunk) | Windows VM | `LAB-WIN` |
 | Vulnerable target | Metasploitable2 VM | `LAB-TARGET` |
+| Firewall | pfSense VM | LAN client and DMZ test host are the labels used in lab 03 |
 
-The lab runs on an isolated VMware network. Real lab IP addresses, hostnames and
+The lab runs on isolated VMware virtual networks. Since Goal 3 began, a firewall
+separates a LAN segment and a DMZ segment. Real lab IP addresses, hostnames and
 account names are intentionally left out of this repository.
 
 ## Evidence and sanitization policy
@@ -152,4 +160,11 @@ real-lab/
   02-sysmon-splunk-telemetry/
     README.md
     evidence/README.md
+  03-firewall-dmz-perimeter/
+    README.md
+    evidence/
+      README.md
+      01-lan-to-dmz-ping-redacted.png
+      02-dmz-to-lan-deny-log-redacted.png
+      03-dmz-rule-before-apply-redacted.png
 ```
