@@ -58,8 +58,8 @@ The project is scoped to these 12 goals. They are the finish line.
 | # | Goal | Tools | Status |
 |---|---|---|---|
 | 1 | Reconnaissance and port scanning | Nmap, Wireshark | Complete (REAL LAB) |
-| 2 | Vulnerability assessment | Nessus | In progress (REAL LAB): first Basic Network Scan completed, 14 listed entries, all Info; no sweep performed (see lab 04) |
-| 3 | Firewall, DMZ and perimeter defense | pfSense | In progress (REAL LAB): firewall with LAN and DMZ segments built, first tests recorded, two results still to verify (see lab 03) |
+| 2 | Vulnerability assessment | Nessus | In progress (REAL LAB): first Basic Network Scan completed on one host, without logging in (Auth: Fail); 14 listed entries, all Info; no sweep performed (see lab 04) |
+| 3 | Firewall, DMZ and perimeter defense | pfSense | In progress (REAL LAB): firewall with LAN and DMZ segments built; ping tests recorded with screenshots; port-level tests and rule documentation still to do (see lab 03) |
 | 4 | IDS/IPS and network detection | | Not started |
 | 5 | Web-based attacks | Burp | Not started |
 | 6 | Malware, Windows telemetry and SIEM | Sysmon, Splunk | Not started; telemetry groundwork in place (see investigation 02) |
@@ -82,16 +82,19 @@ The project is scoped to these 12 goals. They are the finish line.
   observed in Splunk (groundwork for Goal 6).
 - Nessus Essentials 10.12.5 (x64) installed, registered and initialized (Goal 2).
 
-**In progress (Goal 2):** my first Nessus Basic Network Scan is completed. The
-results screenshot shows 14 listed entries, all rated Info, and a 10-minute scan.
-That is not evidence that the host or the network is free of vulnerabilities:
-the screenshot does not show how many hosts were scanned or whether the scanner
-logged in. No sweep was performed and no remediation is claimed.
+**In progress (Goal 2):** my first Nessus Basic Network Scan is completed. It
+covered one host and took 10 minutes, and Nessus did not log in to the host
+(Auth: Fail). The results list shows 14 entries, all rated Info. That is not
+evidence that the host or the network is free of vulnerabilities: a scan that
+does not log in reports only what is visible from the network. No sweep was
+performed and no remediation is claimed.
 See [lab 04](real-lab/04-nessus-baseline-scan/README.md).
 
 **In progress (Goal 3):** a pfSense firewall now separates a LAN segment and a
 DMZ segment in the lab. A LAN-to-DMZ ping succeeded, and a DMZ-to-LAN ping was
-denied and logged by the firewall. Two later results still need to be verified.
+denied and logged by the firewall. With one narrow rule in effect, the DMZ test
+host reached a single external test destination (4 of 4) and still could not
+reach the LAN client (0 of 4, twice).
 See [lab 03](real-lab/03-firewall-dmz-perimeter/README.md).
 
 ## Selected evidence
@@ -103,11 +106,11 @@ Each is short and states only what was observed.
 |---|---|---|---|
 | [01 — Reconnaissance and port scanning](real-lab/01-recon-port-scanning/README.md) | Scanned the lab target with Nmap, captured the scan in Wireshark, then captured a normal HTTP connection as a control | Scan traffic to port 80 ended SYN, SYN/ACK, RST; the normal connection completed SYN, SYN/ACK, ACK | Port and service discovery, packet analysis, telling scan behavior from a normal TCP session |
 | [02 — Endpoint telemetry: Sysmon to Splunk](real-lab/02-sysmon-splunk-telemetry/README.md) | Applied the SwiftOnSecurity Sysmon configuration, generated a controlled outbound connection, and searched for it in Splunk | A Sysmon Event ID 3 record in Splunk naming the process, the account, and the source and destination of the connection | Endpoint telemetry setup, SIEM validation, attributing network activity to a process and account |
-| [03 — Firewall, DMZ and perimeter defense (in progress)](real-lab/03-firewall-dmz-perimeter/README.md) | Built a pfSense firewall with separate LAN and DMZ segments, then tested traffic in both directions with ping and read the firewall log | LAN-to-DMZ ping succeeded (4 of 4); DMZ-to-LAN ping was denied and logged under the default deny rule | Firewall build, network segmentation, default deny, reading firewall logs |
-| [04 — Vulnerability assessment: first Nessus scan (in progress)](real-lab/04-nessus-baseline-scan/README.md) | Ran a Nessus Basic Network Scan in the lab and read the results list | The scan completed in 10 minutes and listed 14 entries, all rated Info | Running a vulnerability scan, reading severity levels, stating the limits of a result |
+| [03 — Firewall, DMZ and perimeter defense (in progress)](real-lab/03-firewall-dmz-perimeter/README.md) | Built a pfSense firewall with separate LAN and DMZ segments, then tested traffic in both directions with ping and read the firewall log | LAN-to-DMZ ping succeeded (4 of 4); DMZ-to-LAN ping was denied and logged under the default deny rule; with one narrow outbound rule in effect, DMZ-to-LAN still failed (0 of 4, twice) | Firewall build, network segmentation, default deny, reading firewall logs |
+| [04 — Vulnerability assessment: first Nessus scan (in progress)](real-lab/04-nessus-baseline-scan/README.md) | Ran a Nessus Basic Network Scan against one lab host and read the results | The scan completed in 10 minutes without logging in to the host (Auth: Fail) and listed 14 entries, all rated Info | Running a vulnerability scan, reading severity levels, stating the limits of a result |
 
-Screenshots are limited to a few per investigation. Lab 03 has three redacted
-screenshots and lab 04 has one sanitized screenshot. Sanitized copies for
+Screenshots are limited to a few per investigation. Lab 03 has four redacted
+screenshots and lab 04 has two sanitized screenshots. Sanitized copies for
 investigations 01 and 02 have not been added yet; each `evidence/` folder lists
 the images and their status.
 
@@ -173,9 +176,11 @@ real-lab/
       01-lan-to-dmz-ping-redacted.png
       02-dmz-to-lan-deny-log-redacted.png
       03-dmz-rule-before-apply-redacted.png
+      04-dmz-host-pings-after-rule-redacted.png
   04-nessus-baseline-scan/
     README.md
     evidence/
       README.md
       01-nessus-basic-scan-results.png
+      02-nessus-hosts-view-redacted.png
 ```

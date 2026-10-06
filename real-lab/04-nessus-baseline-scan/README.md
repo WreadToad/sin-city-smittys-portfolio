@@ -10,8 +10,9 @@
 **Topics:** vulnerability scanning, severity levels, reading scan results, stating
 the limits of a result.
 **Tools:** Nessus Essentials, using the Basic Network Scan policy.
-**Status:** In progress. My first Nessus Basic Network Scan is completed. The
-scanning-versus-sweeping comparison is not done: no sweep was performed.
+**Status:** In progress. My first Nessus Basic Network Scan is completed: one
+host, with Nessus not logged in to it. The scanning-versus-sweeping comparison is
+not done: no sweep was performed.
 
 ---
 
@@ -19,7 +20,7 @@ scanning-versus-sweeping comparison is not done: no sweep was performed.
 Run a vulnerability scanner in my own lab, read the results correctly, and be
 clear about what the result does and does not show. This is my first Nessus scan.
 
-## What the results screenshot shows
+## What the screenshots show
 
 | Item | Value shown |
 |---|---|
@@ -29,6 +30,8 @@ clear about what the result does and does not show. This is my first Nessus scan
 | Severity base | CVSS (Common Vulnerability Scoring System) v3.0 |
 | Start and end | 3:18 PM to 3:28 PM |
 | Elapsed | 10 minutes |
+| Hosts scanned | 1 |
+| Auth column for that host | Fail |
 | Listed entries | 14 |
 | Severity of the entries | Info, on every row |
 | Severity chart | Info only |
@@ -54,7 +57,10 @@ clear about what the result does and does not show. This is my first Nessus scan
 
 Nessus heads this list "Vulnerabilities", but every row here is rated Info. No
 row is rated Low, Medium, High or Critical. The "HTTP (Multiple Issues)" row is a
-group with a count of 2.
+group with a count of 2, which is why the Hosts view shows 15 for the one host.
+
+The Auth column reads Fail: Nessus did not log in to the host. This was a scan
+from the network only.
 
 ## Evidence
 
@@ -62,23 +68,28 @@ group with a count of 2.
 
 ![Nessus results list showing 14 entries, all rated Info, and scan details showing a completed Basic Network Scan that took 10 minutes](evidence/01-nessus-basic-scan-results.png)
 
-See the [evidence notes](evidence/README.md) for what the image shows and what
+**02 — Nessus Hosts view: one host, Auth: Fail**
+
+![Nessus Hosts view showing one scanned host with the Auth column reading Fail and an all-Info result bar](evidence/02-nessus-hosts-view-redacted.png)
+
+See the [evidence notes](evidence/README.md) for what each image shows and what
 is still missing.
 
 ## What this shows, and what it does not
 
 **Shows**
-- One Basic Network Scan ran to completion in 10 minutes.
+- One Basic Network Scan of one host ran to completion in 10 minutes.
+- Nessus did not log in to that host (Auth: Fail).
 - The results list has 14 entries, and all of them are rated Info.
 
 **Does not show**
 - That the host or the network is free of vulnerabilities. This result is not
-  evidence of that.
-- How many hosts were scanned. The screenshot does not show the host count.
-- Whether Nessus logged in to the target. The screenshot does not show the
-  authentication result. A scan that does not log in can only report what is
-  visible from the network.
-- Which system was scanned, or the date. The screenshot shows times only.
+  evidence of that. A scan that does not log in can only report what is visible
+  from the network. It does not check installed software, missing patches or
+  local settings on the host itself.
+- Anything about other systems. Only one host was scanned.
+- Which system was scanned, or the date. The screenshots show times only, and the
+  host address is redacted.
 - Any fix or remediation. None is claimed.
 
 ## Study-guide topic: vulnerability scanning versus vulnerability sweeping
@@ -103,7 +114,6 @@ No Goal 2 scenario has been built in the simulation. The simulation does not run
 Nessus, and simulated output is never REAL LAB evidence.
 
 ## Next steps
-- Capture a screenshot that shows the host count and the authentication result.
 - Run a scan with credentials and compare it with this one.
 - Perform a vulnerability sweep in the lab, then write the scanning-versus-sweeping
   comparison.

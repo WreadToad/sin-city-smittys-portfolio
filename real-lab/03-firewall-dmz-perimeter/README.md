@@ -11,7 +11,8 @@
 segmentation, default deny, reading firewall logs.
 **Tools:** pfSense CE (Community Edition) 2.7.2, ping, the pfSense firewall log.
 **Status:** In progress. A firewall with separate LAN and DMZ segments is built
-and the first tests are recorded. Two results still need to be verified.
+and the first ping tests are recorded with screenshots. Port-level tests and the
+full rule list are still to do.
 
 ---
 
@@ -52,9 +53,22 @@ captured the full rule list for each interface.
 | # | Test | Result | Evidence | Status |
 |---|---|---|---|---|
 | 1 | Ping from the LAN client to the DMZ test host | 4 transmitted, 4 received, 0% packet loss | Screenshot 01 | Supported by screenshot |
-| 2 | Ping from the DMZ test host to the LAN client (first attempt) | Denied. The firewall log shows four ICMP entries from the DMZ test host to the LAN client blocked by the default deny rule | Screenshot 02 | Supported by the firewall log. The ping output on the DMZ test host was not captured |
-| 3 | Added a narrow DMZ rule for ICMP to one external test destination, applied it, then pinged that destination from the DMZ test host | Traffic was observed after the rule was applied. The exact received count was not captured | Screenshot 03 shows the rule as created, before it was applied | Observed, not fully recorded |
-| 4 | Ping from the DMZ test host to the LAN client again, after the rule was added | Not confirmed | None | Needs verification |
+| 2 | Ping from the DMZ test host to the LAN client (first attempt) | Denied. The firewall log shows four ICMP entries from the DMZ test host to the LAN client blocked by the default deny rule | Screenshot 02 | Supported by the firewall log. The ping output for this first attempt was not captured |
+| 3 | Added a narrow DMZ rule for ICMP to one external test destination, applied it, then pinged that destination from the DMZ test host | 4 transmitted, 4 received, 0% packet loss | Screenshot 03 (the rule as created, before it was applied) and screenshot 04 (the ping) | Supported by screenshot 04 |
+| 4 | Ping from the DMZ test host to the LAN client again, with the rule in effect. Run twice | 4 transmitted, 0 received, 100% packet loss, both times | Screenshot 04 | Supported by screenshot 04 |
+
+**How the order of tests 3 and 4 is known**
+- Screenshot 04 is one console window on the DMZ test host. It shows the commands
+  in order: the ping to the external test destination succeeded, then two pings
+  to the LAN client failed.
+- The screenshot has no timestamps. Screenshot 03 was taken before the rule was
+  applied, and no screenshot shows the rule list after it was applied.
+- Screenshot 03 shows this rule as the only rule on the DMZ interface. An earlier
+  attempt to reach the external test destination, before the rule existed, failed
+  (observed, not captured). So 4 of 4 replies means the rule was in effect, and
+  the two LAN pings that follow it came after the rule was applied.
+- The 100% loss matches the default deny rule still blocking DMZ-to-LAN traffic.
+  The log in screenshot 02 cannot be tied to these two specific attempts.
 
 ## Evidence
 
@@ -72,6 +86,10 @@ Redacted copies only. Addresses are replaced with labels.
 
 ![Firewall rule on the DMZ interface allowing ICMP from the DMZ test host to one external test destination, with the pending-changes banner still showing](evidence/03-dmz-rule-before-apply-redacted.png)
 
+**04 — DMZ test host: external ping 4 of 4, then two LAN pings 0 of 4**
+
+![Console on the DMZ test host showing a ping to the external test destination with 4 of 4 replies, followed by two pings to the LAN client with 100% packet loss](evidence/04-dmz-host-pings-after-rule-redacted.png)
+
 See the [evidence notes](evidence/README.md) for what each image shows and what
 is still missing.
 
@@ -82,13 +100,14 @@ is still missing.
 - A host on the LAN could reach the DMZ test host.
 - When the DMZ test host tried to reach the LAN client, the firewall blocked it
   and logged each attempt.
-- A narrow rule for one protocol to one destination was created.
+- With one narrow rule in effect, the DMZ test host reached the single external
+  test destination (4 of 4).
+- With that rule in effect, the DMZ test host still could not reach the LAN
+  client (0 of 4, twice). The narrow rule did not open a path into the LAN.
 
 **Does not show yet**
-- A recorded result for the narrow rule. Traffic was observed, but the count was
-  not captured, and the screenshot predates applying the rule.
-- That the DMZ-to-LAN block still held after the rule was added. That re-test
-  needs to be repeated and captured.
+- The rule list after the change was applied. Screenshot 03 predates applying it.
+- Firewall log entries tied to the two later DMZ-to-LAN attempts.
 - Anything beyond ping. Port-level tests and packet captures are still to do.
 - Hands-on experience with a next-generation firewall (NGFW). I have not used
   one. NGFW concepts are part of my study for this goal only.
@@ -110,7 +129,7 @@ rules are simulated. They do not enforce the real pfSense rules in this lab, and
 this lab does not change the simulation.
 
 ## Next steps
-- Repeat tests 3 and 4 and capture the full ping summary from the DMZ test host.
-- Capture the rule list for each interface and write down why each rule exists.
+- Capture the rule list for each interface as applied, and write down why each
+  rule exists.
 - Repeat the allow and block tests with Nmap and Wireshark.
 - Draw the before and after network diagram.
